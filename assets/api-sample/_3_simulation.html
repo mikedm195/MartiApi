@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+  <b>Simulation sample</b><br/>
+  <div id="patientIdDiv"></div><br/>
+
+  <i>Routine details</i>
+  <div id="detailsDiv"></div><br/>
+
+  <i>Simulation data</i>
+  <div id="simulationDiv"></div>
+
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- IMPORTANTE libreria para sockets -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.0/socket.io.js"></script>
+
+
+<script>
+  function authUser() {
+    let patientId = sessionStorage.patientId;
+    if (!patientId) window.location.href = "_1_login.html";
+    else $("#patientIdDiv").html("<i>SessionId (PatientId): " + patientId + "</i>");
+  }
+
+
+  function getData() {
+    let apiUrl = "http://tradeigyserver-env.us-west-2.elasticbeanstalk.com/api";
+    let routinePath = "/routine";
+    $.ajax({
+
+      url: apiUrl + routinePath,
+      type: 'GET',
+      data: {
+        //La rutina la obtiene de la variable que se guardó en el menu antes de direccionar
+        routine_id: sessionStorage.routineId
+      },
+      success: function(json) {
+        setDetails(json);
+      },
+      error: function(xhr, status) {
+        alert('Ups, an error has ocurred');
+      },
+
+    });
+  }
+
+  function setDetails(json) {
+    //Detalles json
+    //http://tradeigyserver-env.us-west-2.elasticbeanstalk.com/docs/#api-Routine-GetRoutineDetails
+    let details = "";
+    details += "RoutineId: " + json.routine_id + "<br/>";
+    details += "Name: " + json.name + "<br/>";
+    details += "Description: " + json.description + "<br/>";
+    details += "Video: " + json.video + "<br/>";
+    $("#detailsDiv").html(details);
+  }
+
+
+  //PARTE IMPORTANTE WEBSOCKET
+
+  function startSocket() {
+
+    let socketUrl = "http://tradeigyserver-env.us-west-2.elasticbeanstalk.com";
+
+    //Se conecta al websocket
+    var socket = io.connect(socketUrl);
+
+    //Metodo que se ejecuta cuando llega un evento
+    socket.on('device', function(json) {
+      let result = "";
+      result += "Finger 1: " + json.data1 + "<br/>";
+      result += "Finger 2: " + json.data2 + "<br/>";
+      result += "Finger 3: " + json.data3 + "<br/>";
+      result += "Finger 4: " + json.data4 + "<br/>";
+      $('#simulationDiv').html(result);
+    })
+  }
+
+  authUser();
+  getData();
+  startSocket();
+
+</script>
+
+</html>

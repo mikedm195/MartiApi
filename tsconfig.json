@@ -1,0 +1,13 @@
+{
+	"compilerOptions": {
+		"target": "es5",
+		"lib": ["es5", "es6", "dom"],
+		"outDir": "./dist",
+		"sourceMap": true,
+		"rootDir": "./"
+	},
+	"exclude": [
+		"./node_modules"
+	]
+}
+ 

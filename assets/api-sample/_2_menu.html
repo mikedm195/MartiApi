@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+  <b>Simulation sample</b><br/>
+  <div id="patientIdDiv"></div><br/>
+  <i>Patient routines (Click on them)</i><br/>
+  <div id="containerDiv"></div>
+
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+  function authUser() {
+    //Checa si esta registrado el patientId guardado en el _1_login.html
+    let patientId = sessionStorage.patientId;
+    //Si no existe la sesion redirecciona al login
+    if (!patientId)
+      window.location.href = "_1_login.html";
+    else $("#patientIdDiv").html("<i>SessionId (PatientId): " + patientId + "</i>");
+  }
+
+
+  function getRoutines() {
+
+    let apiUrl = "http://tradeigyserver-env.us-west-2.elasticbeanstalk.com/api";
+    let routinesPath = "/treatment/list";
+
+    //Para más info de ajax ver _1_login.html
+    $.ajax({
+
+      url: apiUrl + routinesPath,
+      type: 'GET',
+      data: {
+        //Para este caso envia el patientId de la sesion (sessionStorage)
+        patient_id: sessionStorage.patientId
+      },
+      success: function(json) {
+        setItems(json);
+      },
+      error: function(xhr, status) {
+        alert('Ups, an error has ocurred');
+      },
+
+    });
+  }
+
+  function setItems(json) {
+
+    $("#containerDiv").html();
+    for (var i = 0; i < json.length; i++) {
+
+      //Para la estructura del json revisar
+      //http://tradeigyserver-env.us-west-2.elasticbeanstalk.com/docs/#api-Patient_routines-GetPatientRoutines
+
+      let item = "<br/>";
+      item += "<blockquote onclick=\"startSimulation(" + json[i].routine_id + ")\">";
+      item += "PatientId: " + json[i].patient_id + "<br/>";
+      item += "RoutineId: " + json[i].routine_id + "<br/>";
+      item += "InitialDate: " + new Date(json[i].start_date).toString() + "<br/>";
+      item += "EndDate: " + new Date(json[i].end_date).toString() + "<br/>";
+      item += "Status: " + json[i].status + "<br/>";
+      item += "</blockquote>";
+      $("#containerDiv").append(item);
+
+    }
+  }
+
+  function startSimulation(routineId) {
+    //Guarda en la sesion la rutina Id actual
+    sessionStorage.routineId = routineId;
+    window.location.href = "_3_simulation.html";
+  }
+
+
+  authUser();
+  getRoutines();
+
+</script>
+
+</html>

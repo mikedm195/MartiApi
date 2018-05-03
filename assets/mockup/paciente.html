@@ -1,0 +1,89 @@
+<html !DOCTYPE>
+<head>
+    <title>Bootstrap 3 Collapsible Sidebar</title>
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="css/mainDoctor.css">
+</head>
+<body>
+    <div class="wrapper">
+
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3>Tradeigy Care</h3>
+            </div>
+
+            <ul class="list-unstyled components">
+                <li class="active">
+                    <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Pacientes</a>
+                    <ul class="collapse list-unstyled" id="homeSubmenu">
+                        <li><a href="#">Lista de Pacients</a></li>
+                        <li><a href="#">Rutinas</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Perfil</a>
+                </li>
+                <li>
+                    <a href="doctor.html">Home</a>
+                </li>
+            </ul>
+
+            <ul class="list-unstyled CTAs">
+                <li><a href="index.html" class="download">Logout</a></li>
+            </ul>
+        </nav>
+        <div id="content">
+            <div class="row">
+
+            <div class="col-md-6">
+                <h1>Lista de Pacientes</h1>
+            <div class="row">
+                <div class="card">
+                  <img src="images\notavailable.png" alt="Jane" style="width:30%">
+                  <div class="container">
+                    <h2>Jane Doe</h2>
+                    <p>83 años</p>
+                    <p>Artritis reumatoide</p>
+                    <a href="pacienteEspecifico.html"><p><button>Detalles</button></p></a>
+                  </div>
+                </div>
+            </div>
+
+              <div class="row">
+                <div class="card">
+                  <img src="images/notavailable.png" alt="Mike" style="width:30%">
+                  <div class="container">
+                    <h2>Mike Ross</h2>
+                    <p>63 años</p>
+                    <p>Torsion de Tobillo</p>
+                    <p><button class="button" href="pacienteEspecifico.html">Detalles</button></p>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="card">
+                  <img src="images/notavailable.png" alt="John" style="width:30%">
+                  <div class="container">
+                    <h2>John Doe</h2>
+                    <p>56 años</p>
+                    <p>Lesión de cadera</p>
+                    <p><button class="button" href="pacienteEspecifico.html">Detalles</button></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+        <div class="col-md-6">
+        </div>
+    </div>
+
+    </div>
+    </div>
+
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!-- Bootstrap Js CDN -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>

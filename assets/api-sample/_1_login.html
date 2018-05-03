@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+  <b>Login sample</b><br/>
+  <i>Test-user: patient<br/> Test-Password: 1234<br/></i>
+  <input type="text" id="userInput" placeholder="User or email"><br/>
+  <input type="text" id="passwordInput" placeholder="Password"><br/>
+  <button id="sendButton">Send</button><br/>
+  <div id="messageDiv"></div>
+</body>
+
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+<!-- PARTE IMPORTANTE -->
+
+<script>
+  function sendRequest() {
+
+    //Ajax es un framework para HACER PETICIONES WEB (Asi de simple)
+
+    let apiUrl = "http://localhost:3000/api";
+    //Los paths están especificados en /docs
+    let authPath = "/patient/auth";
+
+    $.ajax({
+
+      // La URL para la petición en este caso http://tradeigyserver.../patient/auth
+      url: apiUrl + authPath,
+
+      // especifica el tipo de petición (GET, POST, PUTs)
+      // Ver /docs para ver ejemplos
+      type: 'GET',
+
+      // La información a enviar (Para este caso los valores los obtiene de los valores de los inputs)
+      data: {
+        email: $("#userInput").val(),
+        password: $("#passwordInput").val()
+      },
+
+      // Código a ejecutar cuado la petición es satisfactoria;
+      success: function(json) {
+        //La estructura del json esta especificada en el docs
+        //Para este caso esta en  http://tradeigyserver-env.us-west-2.elasticbeanstalk.com/docs/#api-Patient-AuthPatient
+        let patientId = json.patient_id;
+        if (patientId != -1) login(patientId);
+        else $('#messageDiv').html("Wrong user or password");
+      },
+
+      // código a ejecutar si la petición falla;
+      error: function(xhr, status) {
+        alert('Ups, an error has ocurred');
+      },
+
+    });
+  }
+
+
+  // HTML5 permite usar BROWSER STORAGE (evolucion de cookies)
+  // para el MANEJO DE SESIONES y datos temporales
+  // se pueden utilizar para almacenar el id del paciente o de la rutina
+
+  function login(patientId) {
+    //sessionStorage es un objeto del sistema
+    sessionStorage.patientId = patientId;
+    //Redirecciona al menu (Con la variable patientId almacenada)
+    window.location.href = "_2_menu.html";
+  }
+
+  $("#sendButton").click(function() {
+    sendRequest();
+  });
+
+</script>
+
+</html>
