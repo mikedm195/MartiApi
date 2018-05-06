@@ -64,7 +64,7 @@ export default class SellerCtrl
 
     deleteSeller(req: Request, res: Response, next: NextFunction)
     {
-        let sellerId = req.body.seller_id;
+        let sellerId = req.query.seller_id;
         console.log("sellerId " + sellerId)
         SqlSource.deleteSeller(sellerId)
             .then((result: void) =>

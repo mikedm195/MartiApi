@@ -45,7 +45,9 @@ export default class ProductCtrl
     getProductList(req: Request, res: Response, next: NextFunction)
     {
         let categoryId = req.query.category_id;
-        SqlSource.getProductList(categoryId)
+        let color = req.query.color;
+        let age = req.query.age;
+        SqlSource.getProductList(categoryId, color, age)
             .then((result: [Product]) =>
             {
                 for(var i = 0; i<result.length;i++){
@@ -83,7 +85,7 @@ export default class ProductCtrl
 
     deleteProduct(req: Request, res: Response, next: NextFunction)
     {
-        let productId = req.body.product_id;        
+        let productId = req.query.product_id;        
         SqlSource.deleteProduct(productId)
             .then((result: void) =>
             {

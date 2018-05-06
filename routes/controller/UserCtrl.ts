@@ -83,8 +83,7 @@ export default class UserCtrl
 
     deleteUser(req: Request, res: Response, next: NextFunction)
     {
-        let userId = req.body.user_id;
-        console.log("userId " + userId)
+        let userId = req.query.user_id;
         SqlSource.deleteUser(userId)
             .then((result: void) =>
             {

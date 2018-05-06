@@ -37,21 +37,6 @@ export class SqlSource implements SqlRepository {
     });
   }
 
-  /*
-  Query template
-   return new Promise((resolve, reject) => {
-      var query = "SELECT...";
-      this.sql.query(query, function (err, result, fields) {
-        if (err) return reject(err);
-        if (result.length > 0) {
-          var mapper = new AnyMapper();
-          var res = mapper.transformList(result);
-          resolve(res);
-        } else  resolve([]);
-      });
-    });
-  */
-
   isUserAuth(email: string, password: string): Promise<User> {
     return new Promise((resolve, reject) => {
       var query =
@@ -224,15 +209,29 @@ export class SqlSource implements SqlRepository {
     });
   }
 
-  getProductList(categoryId: number): Promise<Product[]> {
+  getProductList(categoryId: number, color: string, age: string): Promise<Product[]> {
     return new Promise((resolve, reject) => {      
+      var whereQuery = null;
       var query =
         "SELECT * " +
-        "FROM Products " +
-        ((categoryId) ? 
-        "WHERE category_id = " + categoryId
-        : "")
-        + ";";
+        "FROM Products ";        
+
+      if(categoryId)
+        whereQuery = "WHERE category_id = " + categoryId;
+      if(color)
+        if(!whereQuery)
+          whereQuery = "WHERE color = '" + color + "' ";
+        else
+          whereQuery += " AND color = '" + color + "' ";
+      if(age)
+        if(!whereQuery)
+          whereQuery = "WHERE age = '" + age + "' ";
+        else
+          whereQuery += " AND age = '" + age + "' ";
+
+      if(whereQuery)
+        query+=whereQuery;
+      query+=";";
 
       this.sql.query(query, function (err, result, fields) {
         if (err) return reject(err);
@@ -266,12 +265,11 @@ export class SqlSource implements SqlRepository {
     return new Promise((resolve, reject) => {
       var query =
         "INSERT INTO Carts " +
-        "(cart_id, product_id, quantity, color, size) " +
+        "(user_id, product_id, quantity, size) " +
         "VALUES(" +
-        "'" + cart.id + "', " +
+        "'" + cart.user_id + "', " +
         "'" + cart.product_id + "', " +
-        "'" + cart.quantity + "', " +
-        "'" + cart.color + "', " +
+        "'" + cart.quantity + "', " +        
         "'" + cart.size + "' " +
         ");";
 
@@ -290,10 +288,9 @@ export class SqlSource implements SqlRepository {
         "SET foreign_key_checks = 0; " +
         "UPDATE Carts " +
         "SET product_id = '" + cart.product_id + "', " +
-        "quantity = '" + cart.quantity + "', " +
-        "color = '" + cart.color + "', " +
+        "quantity = '" + cart.quantity + "', " +        
         "size = '" + cart.size + "' " +
-        "WHERE user_id = '" + cart.id + "'; " +
+        "WHERE user_id = '" + cart.user_id + "'; " +
         "SET foreign_key_checks = 1;";
 
       this.sql.query(query, function (err, result, fields) {
@@ -303,13 +300,14 @@ export class SqlSource implements SqlRepository {
     });
   }
 
-  getCartDetails(cartId: number): Promise<Cart> {
+  getCartDetails(userId: number, productId: number): Promise<Cart> {
     return new Promise((resolve, reject) => {
       var query =
         "SELECT * " +
-        "FROM Carts " +
-        "WHERE cart_id = " + cartId;
-
+        "FROM Carts c " +
+        "LEFT JOIN Products p ON c.product_id = p.product_id " +
+        "WHERE user_id = " + userId + " AND p.product_id = " + productId +";";
+      
       this.sql.query(query, function (err, result, fields) {
         if (err) return reject(err);
         if (result.length > 0) {
@@ -325,7 +323,8 @@ export class SqlSource implements SqlRepository {
     return new Promise((resolve, reject) => {
       var query =
         "SELECT * " +
-        "FROM Carts " +
+        "FROM Carts c " +
+        "LEFT JOIN Products p ON c.product_id = p.product_id "
         "WHERE user_id = " + userId;
 
       this.sql.query(query, function (err, result, fields) {
@@ -339,13 +338,13 @@ export class SqlSource implements SqlRepository {
     });
   }
 
-  deleteCart(cartId: number): Promise<void> {
+  deleteCart(userId: number, productId: number): Promise<void> {
     return new Promise((resolve, reject) => {
       var query =
         "SET foreign_key_checks = 0; " +
         "DELETE FROM Carts " +
-        "WHERE cart_id = " + cartId + ";" +
-        "SET foreign_key_checks = 1; ";
+        "WHERE user_id = " + userId + " AND product_id = " + productId +";" +
+        "SET foreign_key_checks = 1; ";        
 
       this.sql.query(query, function (err, result) {
         if (err) return reject(err);
@@ -446,12 +445,11 @@ export class SqlSource implements SqlRepository {
           var query = "";
           for (var i = 0; i < order.details.length; i++) {
             query += "INSERT INTO OrderDetails " +
-              "(order_id, product_id, quantity, color, size) " +
+              "(order_id, product_id, quantity, size) " +
               "VALUES(" +
               "'" + order.id + "', " +
               "'" + order.details[i].product_id + "', " +
-              "'" + order.details[i].quantity + "', " +
-              "'" + order.details[i].color + "', " +
+              "'" + order.details[i].quantity + "', " +              
               "'" + order.details[i].size + "' " +
               ");";
           }
@@ -491,8 +489,7 @@ export class SqlSource implements SqlRepository {
               new OrderDetail(
                 result[i].order_id,
                 result[i].product_id,
-                result[i].quantity,
-                result[i].color,
+                result[i].quantity,                
                 result[i].size
               )
             )

@@ -22,20 +22,6 @@ var SqlSource = /** @class */ (function () {
             multipleStatements: true
         });
     }
-    /*
-    Query template
-     return new Promise((resolve, reject) => {
-        var query = "SELECT...";
-        this.sql.query(query, function (err, result, fields) {
-          if (err) return reject(err);
-          if (result.length > 0) {
-            var mapper = new AnyMapper();
-            var res = mapper.transformList(result);
-            resolve(res);
-          } else  resolve([]);
-        });
-      });
-    */
     SqlSource.prototype.isUserAuth = function (email, password) {
         var _this = this;
         return new Promise(function (resolve, reject) {
@@ -212,15 +198,27 @@ var SqlSource = /** @class */ (function () {
             });
         });
     };
-    SqlSource.prototype.getProductList = function (categoryId) {
+    SqlSource.prototype.getProductList = function (categoryId, color, age) {
         var _this = this;
         return new Promise(function (resolve, reject) {
+            var whereQuery = null;
             var query = "SELECT * " +
-                "FROM Products " +
-                ((categoryId) ?
-                    "WHERE category_id = " + categoryId
-                    : "")
-                + ";";
+                "FROM Products ";
+            if (categoryId)
+                whereQuery = "WHERE category_id = " + categoryId;
+            if (color)
+                if (!whereQuery)
+                    whereQuery = "WHERE color = '" + color + "' ";
+                else
+                    whereQuery += " AND color = '" + color + "' ";
+            if (age)
+                if (!whereQuery)
+                    whereQuery = "WHERE age = '" + age + "' ";
+                else
+                    whereQuery += " AND age = '" + age + "' ";
+            if (whereQuery)
+                query += whereQuery;
+            query += ";";
             _this.sql.query(query, function (err, result, fields) {
                 if (err)
                     return reject(err);
@@ -256,12 +254,11 @@ var SqlSource = /** @class */ (function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
             var query = "INSERT INTO Carts " +
-                "(cart_id, product_id, quantity, color, size) " +
+                "(user_id, product_id, quantity, size) " +
                 "VALUES(" +
-                "'" + cart.id + "', " +
+                "'" + cart.user_id + "', " +
                 "'" + cart.product_id + "', " +
                 "'" + cart.quantity + "', " +
-                "'" + cart.color + "', " +
                 "'" + cart.size + "' " +
                 ");";
             _this.sql.query(query, function (err, result) {
@@ -282,9 +279,8 @@ var SqlSource = /** @class */ (function () {
                 "UPDATE Carts " +
                 "SET product_id = '" + cart.product_id + "', " +
                 "quantity = '" + cart.quantity + "', " +
-                "color = '" + cart.color + "', " +
                 "size = '" + cart.size + "' " +
-                "WHERE user_id = '" + cart.id + "'; " +
+                "WHERE user_id = '" + cart.user_id + "'; " +
                 "SET foreign_key_checks = 1;";
             _this.sql.query(query, function (err, result, fields) {
                 if (err)
@@ -293,12 +289,13 @@ var SqlSource = /** @class */ (function () {
             });
         });
     };
-    SqlSource.prototype.getCartDetails = function (cartId) {
+    SqlSource.prototype.getCartDetails = function (userId, productId) {
         var _this = this;
         return new Promise(function (resolve, reject) {
             var query = "SELECT * " +
-                "FROM Carts " +
-                "WHERE cart_id = " + cartId;
+                "FROM Carts c " +
+                "LEFT JOIN Products p ON c.product_id = p.product_id " +
+                "WHERE user_id = " + userId + " AND p.product_id = " + productId + ";";
             _this.sql.query(query, function (err, result, fields) {
                 if (err)
                     return reject(err);
@@ -316,8 +313,9 @@ var SqlSource = /** @class */ (function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
             var query = "SELECT * " +
-                "FROM Carts " +
-                "WHERE user_id = " + userId;
+                "FROM Carts c " +
+                "LEFT JOIN Products p ON c.product_id = p.product_id ";
+            "WHERE user_id = " + userId;
             _this.sql.query(query, function (err, result, fields) {
                 if (err)
                     return reject(err);
@@ -331,12 +329,12 @@ var SqlSource = /** @class */ (function () {
             });
         });
     };
-    SqlSource.prototype.deleteCart = function (cartId) {
+    SqlSource.prototype.deleteCart = function (userId, productId) {
         var _this = this;
         return new Promise(function (resolve, reject) {
             var query = "SET foreign_key_checks = 0; " +
                 "DELETE FROM Carts " +
-                "WHERE cart_id = " + cartId + ";" +
+                "WHERE user_id = " + userId + " AND product_id = " + productId + ";" +
                 "SET foreign_key_checks = 1; ";
             _this.sql.query(query, function (err, result) {
                 if (err)
@@ -442,12 +440,11 @@ var SqlSource = /** @class */ (function () {
                     var query = "";
                     for (var i = 0; i < order.details.length; i++) {
                         query += "INSERT INTO OrderDetails " +
-                            "(order_id, product_id, quantity, color, size) " +
+                            "(order_id, product_id, quantity, size) " +
                             "VALUES(" +
                             "'" + order.id + "', " +
                             "'" + order.details[i].product_id + "', " +
                             "'" + order.details[i].quantity + "', " +
-                            "'" + order.details[i].color + "', " +
                             "'" + order.details[i].size + "' " +
                             ");";
                     }
@@ -480,7 +477,7 @@ var SqlSource = /** @class */ (function () {
                 if (result.length > 0) {
                     var res = new Order_1.Order(result[0].order_id, result[0].user_id, result[0].order_id, result[0].date, []);
                     for (var i = 0; i < result.details.length; i++) {
-                        result.details.push(new OrderDetail_1.OrderDetail(result[i].order_id, result[i].product_id, result[i].quantity, result[i].color, result[i].size));
+                        result.details.push(new OrderDetail_1.OrderDetail(result[i].order_id, result[i].product_id, result[i].quantity, result[i].size));
                     }
                     //var mapper = new OrderMapper();
                     //var res = mapper.transformList(result);          

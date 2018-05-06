@@ -19,14 +19,14 @@ export interface SqlRepository
   saveProduct(product: Product): Promise<number>;
   setProduct(product: Product): Promise<void>;
   getProductDetails(productId: number): Promise<Product>;
-  getProductList(categoryId: number): Promise<Product[]>;
+  getProductList(categoryId: number, color: string, edad: string): Promise<Product[]>;
   deleteProduct(productId: number): Promise<void>;
 
   saveCart(cart: Cart): Promise<number>;
   setCart(cart: Cart): Promise<void>;
-  getCartDetails(cartId: number): Promise<Cart>;
+  getCartDetails(cartId: number, productId: number): Promise<Cart>;
   getCartList(userId: number): Promise<Cart[]>;
-  deleteCart(cartId: number): Promise<void>;
+  deleteCart(cartId: number, productId: number): Promise<void>;
 
   saveCategory(category: Category): Promise<number>;
   setCategory(category: Category): Promise<void>;

@@ -27,7 +27,9 @@ var ProductCtrl = /** @class */ (function () {
     };
     ProductCtrl.prototype.getProductList = function (req, res, next) {
         var categoryId = req.query.category_id;
-        SqlSource_1.default.getProductList(categoryId)
+        var color = req.query.color;
+        var age = req.query.age;
+        SqlSource_1.default.getProductList(categoryId, color, age)
             .then(function (result) {
             for (var i = 0; i < result.length; i++) {
                 result[i].photo = "http://" + req.get('host') + "/images/" + result[i].photo;

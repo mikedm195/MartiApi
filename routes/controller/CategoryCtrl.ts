@@ -56,7 +56,7 @@ export default class CategoryCtrl
 
     deleteCategory(req: Request, res: Response, next: NextFunction)
     {
-        let categoryId = req.body.category_id;        
+        let categoryId = req.query.category_id;        
         SqlSource.deleteCategory(categoryId)
             .then((result: void) =>
             {

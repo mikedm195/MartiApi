@@ -5,6 +5,7 @@ import SqlSource from "../../src/datasource/SqlSource";
 import { Model } from "../../src/models/Model";
 import { Cart } from "../../src/models/Cart";
 import { CtrlUtil } from "./CtrlUtil";
+import { Product } from "../../src/models/Product";
 
 
 export default class CartCtrl
@@ -12,10 +13,9 @@ export default class CartCtrl
     saveCart(req: Request, res: Response, next: NextFunction)
     {        
         let cart = new Cart( 
-            Model.generateId(),                       
+            req.body.user_id,
             req.body.product_id,
-            req.body.quantity,
-            req.body.color,
+            req.body.quantity,            
             req.body.size,
         );
 
@@ -29,20 +29,25 @@ export default class CartCtrl
 
     getCartDetails(req: Request, res: Response, next: NextFunction)
     {
-        let cartId = req.query.cart_id;        
-        SqlSource.getCartDetails(cartId)
+        let userId = req.query.user_id;
+        let productId = req.query.product_id;
+        SqlSource.getCartDetails(userId, productId)
             .then((result: Cart) =>
             {
+                result.product.photo = "http://" + req.get('host') + "/images/" + result.product.photo;
                 CtrlUtil.sendModel(res, result);
             });
     }    
 
     getCartList(req: Request, res: Response, next: NextFunction)
     {
-        let patientId = req.query.patient_id;
-        SqlSource.getCartList(patientId)
+        let userId = req.query.user_id;
+        SqlSource.getCartList(userId)
             .then((result: [Cart]) =>
             {
+                for(var i = 0; i<result.length;i++){
+                    result[i].product.photo = "http://" + req.get('host') + "/images/" + result[i].product.photo;
+                }                
                 CtrlUtil.sendList(res, result);
             });
     }
@@ -50,14 +55,14 @@ export default class CartCtrl
     setCart(req: Request, res: Response, next: NextFunction)
     {
         let cartId = req.body.cart_id;
-        SqlSource.getCartDetails(cartId)
+        let productId = req.body.product_id;
+        SqlSource.getCartDetails(cartId, productId)
             .then((result: Cart) =>
             {
                 let cart = new Cart(
                     cartId,                    
                     req.body.product_id ? req.body.product_id : result.product_id,
-                    req.body.quantity ? req.body.quantity : result.quantity,
-                    req.body.color ? req.body.color : result.color,
+                    req.body.quantity ? req.body.quantity : result.quantity,                    
                     req.body.size ? req.body.size : result.size,
                 );                
                 SqlSource.setCart(cart)
@@ -70,8 +75,9 @@ export default class CartCtrl
 
     deleteCart(req: Request, res: Response, next: NextFunction)
     {
-        let cartId = req.body.cart_id;        
-        SqlSource.deleteCart(cartId)
+        let userId = req.query.user_id;   
+        let productId = req.query.product_id;         
+        SqlSource.deleteCart(userId, productId)
             .then((result: void) =>
             {
                 CtrlUtil.sendOk(res);

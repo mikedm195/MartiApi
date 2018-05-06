@@ -11,6 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Cart_1 = require("../../../models/Cart");
+var Product_1 = require("../../../models/Product");
 var Mapper_1 = require("./Mapper");
 var CartMapper = /** @class */ (function (_super) {
     __extends(CartMapper, _super);
@@ -18,7 +19,9 @@ var CartMapper = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     CartMapper.prototype.transform = function (query) {
-        var data = new Cart_1.Cart(query.user_id, query.product_id, query.quantity, query.color, query.size);
+        var product = new Product_1.Product(query.product_id, query.category_id, query.name, query.photo, query.video, query.price, query.color, query.age);
+        var data = new Cart_1.Cart(query.user_id, query.product_id, query.quantity, query.size);
+        data.product = product;
         return data;
     };
     return CartMapper;

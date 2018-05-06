@@ -95,7 +95,7 @@ ALTER TABLE Orders ADD CONSTRAINT Orders_User FOREIGN KEY Orders_User (user_id)
     REFERENCES Users (user_id);
 
 -- Reference: Products_Categories (table: Products)
-ALTER TABLE Products ADD CONSTRAINT Products_Categories FOREIGN KEY Products_Categories (caregory_id)
+ALTER TABLE Products ADD CONSTRAINT Products_Categories FOREIGN KEY Products_Categories (category_id)
     REFERENCES Categories (category_id)
     ON DELETE CASCADE
     ON UPDATE CASCADE;

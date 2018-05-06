@@ -13,21 +13,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Model_1 = require("./Model");
 var Cart = /** @class */ (function (_super) {
     __extends(Cart, _super);
-    function Cart(id, product_id, quantity, color, size) {
+    function Cart(user_id, product_id, quantity, size) {
         var _this = _super.call(this) || this;
-        _this.id = id;
+        _this.user_id = user_id;
         _this.product_id = product_id;
         _this.quantity = quantity;
-        _this.color = color;
         _this.size = size;
         return _this;
     }
     Cart.prototype.export = function () {
         return {
-            cart_id: this.id,
+            user_id: this.user_id,
             product_id: this.product_id,
+            product: this.product,
             quantity: this.quantity,
-            color: this.color,
             size: this.size,
         };
     };

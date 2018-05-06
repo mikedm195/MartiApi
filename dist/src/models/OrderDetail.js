@@ -13,12 +13,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Model_1 = require("./Model");
 var OrderDetail = /** @class */ (function (_super) {
     __extends(OrderDetail, _super);
-    function OrderDetail(id, product_id, quantity, color, size) {
+    function OrderDetail(id, product_id, quantity, size) {
         var _this = _super.call(this) || this;
         _this.id = id;
         _this.product_id = product_id;
         _this.quantity = quantity;
-        _this.color = color;
         _this.size = size;
         return _this;
     }
@@ -27,7 +26,6 @@ var OrderDetail = /** @class */ (function (_super) {
             orderDetail_id: this.id,
             product_id: this.product_id,
             quantity: this.quantity,
-            color: this.color,
             size: this.size,
         };
     };
