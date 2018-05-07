@@ -51,7 +51,7 @@ var ProductCtrl = /** @class */ (function () {
         });
     };
     ProductCtrl.prototype.deleteProduct = function (req, res, next) {
-        var productId = req.body.product_id;
+        var productId = req.query.product_id;
         SqlSource_1.default.deleteProduct(productId)
             .then(function (result) {
             CtrlUtil_1.CtrlUtil.sendOk(res);

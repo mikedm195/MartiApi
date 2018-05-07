@@ -41,7 +41,7 @@ var SellerCtrl = /** @class */ (function () {
         });
     };
     SellerCtrl.prototype.deleteSeller = function (req, res, next) {
-        var sellerId = req.body.seller_id;
+        var sellerId = req.query.seller_id;
         console.log("sellerId " + sellerId);
         SqlSource_1.default.deleteSeller(sellerId)
             .then(function (result) {

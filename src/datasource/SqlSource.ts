@@ -324,7 +324,7 @@ export class SqlSource implements SqlRepository {
       var query =
         "SELECT * " +
         "FROM Carts c " +
-        "LEFT JOIN Products p ON c.product_id = p.product_id "
+        "LEFT JOIN Products p ON c.product_id = p.product_id " +
         "WHERE user_id = " + userId;
 
       this.sql.query(query, function (err, result, fields) {
@@ -343,7 +343,9 @@ export class SqlSource implements SqlRepository {
       var query =
         "SET foreign_key_checks = 0; " +
         "DELETE FROM Carts " +
-        "WHERE user_id = " + userId + " AND product_id = " + productId +";" +
+        "WHERE user_id = " + userId + 
+        ((productId) ? " AND product_id = " + productId : "") 
+        + ";" +
         "SET foreign_key_checks = 1; ";        
 
       this.sql.query(query, function (err, result) {
@@ -559,13 +561,14 @@ export class SqlSource implements SqlRepository {
     return new Promise((resolve, reject) => {
       var query =
         "SELECT * " +
-        "FROM Orders " +
-        "WHERE seller_id = " + sellerId;
-
+        "FROM Sellers;";
+              
       this.sql.query(query, function (err, result, fields) {
         if (err) return reject(err);
-        if (result.length > 0) {          
-          resolve(result);
+        if (result.length > 0) {    
+          var mapper = new SellerMapper();
+          var res = mapper.transformList(result);              
+          resolve(res);
         } else resolve(null);
       });
     });

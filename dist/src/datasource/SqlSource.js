@@ -314,8 +314,8 @@ var SqlSource = /** @class */ (function () {
         return new Promise(function (resolve, reject) {
             var query = "SELECT * " +
                 "FROM Carts c " +
-                "LEFT JOIN Products p ON c.product_id = p.product_id ";
-            "WHERE user_id = " + userId;
+                "LEFT JOIN Products p ON c.product_id = p.product_id " +
+                "WHERE user_id = " + userId;
             _this.sql.query(query, function (err, result, fields) {
                 if (err)
                     return reject(err);
@@ -334,7 +334,9 @@ var SqlSource = /** @class */ (function () {
         return new Promise(function (resolve, reject) {
             var query = "SET foreign_key_checks = 0; " +
                 "DELETE FROM Carts " +
-                "WHERE user_id = " + userId + " AND product_id = " + productId + ";" +
+                "WHERE user_id = " + userId +
+                ((productId) ? " AND product_id = " + productId : "")
+                + ";" +
                 "SET foreign_key_checks = 1; ";
             _this.sql.query(query, function (err, result) {
                 if (err)
@@ -546,13 +548,14 @@ var SqlSource = /** @class */ (function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
             var query = "SELECT * " +
-                "FROM Orders " +
-                "WHERE seller_id = " + sellerId;
+                "FROM Sellers;";
             _this.sql.query(query, function (err, result, fields) {
                 if (err)
                     return reject(err);
                 if (result.length > 0) {
-                    resolve(result);
+                    var mapper = new SellerMapper_1.SellerMapper();
+                    var res = mapper.transformList(result);
+                    resolve(res);
                 }
                 else
                     resolve(null);

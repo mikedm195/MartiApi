@@ -8,7 +8,14 @@ var OrderCtrl = /** @class */ (function () {
     function OrderCtrl() {
     }
     OrderCtrl.prototype.saveOrder = function (req, res, next) {
-        var order = new Order_1.Order(Model_1.Model.generateId(), req.body.user_id, req.body.seller_id, Date.now(), req.body.details);
+        var details = JSON.parse(req.body.details);
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+        var yyyy = today.getFullYear();
+        var date = parseInt([yyyy, (mm > 9 ? '' : '0') + mm, (dd > 9 ? '' : '0') + dd].join(''));
+        var order = new Order_1.Order(Model_1.Model.generateId(), req.body.user_id, req.body.seller_id, date, details);
+        console.log(JSON.stringify(order, null, "\t"));
         SqlSource_1.default.saveOrder(order)
             .then(function (result) {
             var out = { order_id: result };

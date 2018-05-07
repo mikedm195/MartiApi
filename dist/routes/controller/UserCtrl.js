@@ -42,8 +42,7 @@ var UserCtrl = /** @class */ (function () {
         });
     };
     UserCtrl.prototype.deleteUser = function (req, res, next) {
-        var userId = req.body.user_id;
-        console.log("userId " + userId);
+        var userId = req.query.user_id;
         SqlSource_1.default.deleteUser(userId)
             .then(function (result) {
             CtrlUtil_1.CtrlUtil.sendOk(res);

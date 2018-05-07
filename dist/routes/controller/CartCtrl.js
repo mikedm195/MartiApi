@@ -46,10 +46,8 @@ var CartCtrl = /** @class */ (function () {
         });
     };
     CartCtrl.prototype.deleteCart = function (req, res, next) {
-        var userId = req.body.user_id;
-        var productId = req.body.product_id;
-        console.log(JSON.stringify(req.body, null, "\t"));
-        console.log(userId, productId);
+        var userId = req.query.user_id;
+        var productId = req.query.product_id;
         SqlSource_1.default.deleteCart(userId, productId)
             .then(function (result) {
             CtrlUtil_1.CtrlUtil.sendOk(res);

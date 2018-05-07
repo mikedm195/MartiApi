@@ -34,7 +34,7 @@ var CategoryCtrl = /** @class */ (function () {
         });
     };
     CategoryCtrl.prototype.deleteCategory = function (req, res, next) {
-        var categoryId = req.body.category_id;
+        var categoryId = req.query.category_id;
         SqlSource_1.default.deleteCategory(categoryId)
             .then(function (result) {
             CtrlUtil_1.CtrlUtil.sendOk(res);
