@@ -217,7 +217,7 @@ export class SqlSource implements SqlRepository {
         "FROM Products ";        
 
       if(categoryId)
-        whereQuery = "WHERE category_id = " + categoryId;
+        whereQuery = "WHERE category_id = " + categoryId + " ";
       if(color)
         if(!whereQuery)
           whereQuery = "WHERE color = '" + color + "' ";
@@ -231,7 +231,7 @@ export class SqlSource implements SqlRepository {
 
       if(whereQuery)
         query+=whereQuery;
-      query+=";";
+      query+="ORDER BY RAND();";
 
       this.sql.query(query, function (err, result, fields) {
         if (err) return reject(err);
@@ -407,6 +407,23 @@ export class SqlSource implements SqlRepository {
           var mapper = new CategoryMapper();
           var res = mapper.transformList(result);
           resolve(res[0]);
+        } else resolve(null);
+      });
+    });
+  }
+
+  getCategoryList(): Promise<Category[]> {
+    return new Promise((resolve, reject) => {
+      var query =
+        "SELECT * " +
+        "FROM Categories;";        
+
+      this.sql.query(query, function (err, result, fields) {
+        if (err) return reject(err);
+        if (result.length > 0) {
+          var mapper = new CategoryMapper();
+          var res = mapper.transformList(result);
+          resolve(res);
         } else resolve(null);
       });
     });
@@ -684,6 +701,37 @@ export class SqlSource implements SqlRepository {
         if (result.affectedRows > 0) {
           resolve();
         } else resolve();
+      });
+    });
+  }
+
+  getColorList(): Promise <string[]>{
+    return new Promise((resolve, reject) => {
+      var query =
+        "SELECT DISTINCT color " +
+        "FROM Products " +
+        "WHERE color IS NOT NULL;";
+
+      this.sql.query(query, function (err, result, fields) {
+        if (err) return reject(err);
+        if (result.length > 0) {          
+          resolve(result);
+        } else resolve(null);
+      });
+    });
+  }
+  getAgeList(): Promise <string[]>{
+    return new Promise((resolve, reject) => {
+      var query =
+        "SELECT DISTINCT age " +
+        "FROM Products " +
+        "WHERE age IS NOT NULL;";
+
+      this.sql.query(query, function (err, result, fields) {
+        if (err) return reject(err);
+        if (result.length > 0) {          
+          resolve(result);
+        } else resolve(null);
       });
     });
   }

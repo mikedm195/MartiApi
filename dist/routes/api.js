@@ -8,6 +8,7 @@ var PhotoCtrl_1 = require("./controller/PhotoCtrl");
 var ProductCtrl_1 = require("./controller/ProductCtrl");
 var SellerCtrl_1 = require("./controller/SellerCtrl");
 var UserCtrl_1 = require("./controller/UserCtrl");
+var OtherCtrl_1 = require("./controller/OtherCtrl");
 var multer = require("multer");
 var storage = multer.diskStorage({
     destination: function (req, res, cb) {
@@ -36,6 +37,7 @@ var Api = /** @class */ (function () {
         this.productCtrl = new ProductCtrl_1.default();
         this.sellerCtrl = new SellerCtrl_1.default();
         this.userCtrl = new UserCtrl_1.default();
+        this.otherCtrl = new OtherCtrl_1.default();
         this.init();
     }
     Api.prototype.init = function () {
@@ -55,6 +57,7 @@ var Api = /** @class */ (function () {
         this.router.put('/cart/', this.cartCtrl.setCart);
         this.router.delete('/cart/', this.cartCtrl.deleteCart);
         this.router.get('/category/', this.categoryCtrl.getCategoryDetails);
+        this.router.get('/category/list', this.categoryCtrl.getCategoryList);
         this.router.post('/category/', this.categoryCtrl.saveCategory);
         this.router.put('/category/', this.categoryCtrl.setCategory);
         this.router.delete('/category/', this.categoryCtrl.deleteCategory);
@@ -70,6 +73,8 @@ var Api = /** @class */ (function () {
         this.router.delete('/photo/', this.photoCtrl.deletePhoto);
         this.router.get('/order/', this.orderCtrl.getOrderDetails);
         this.router.post('/order/', this.orderCtrl.saveOrder);
+        this.router.get('/color/list', this.otherCtrl.getColorList);
+        this.router.get('/age/list', this.otherCtrl.getAgeList);
         return this;
     };
     return Api;

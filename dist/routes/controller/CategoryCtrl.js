@@ -22,6 +22,12 @@ var CategoryCtrl = /** @class */ (function () {
             CtrlUtil_1.CtrlUtil.sendModel(res, result);
         });
     };
+    CategoryCtrl.prototype.getCategoryList = function (req, res, next) {
+        SqlSource_1.default.getCategoryList()
+            .then(function (result) {
+            CtrlUtil_1.CtrlUtil.sendList(res, result);
+        });
+    };
     CategoryCtrl.prototype.setCategory = function (req, res, next) {
         var categoryId = req.body.categoryt_id;
         SqlSource_1.default.getCategoryDetails(categoryId)

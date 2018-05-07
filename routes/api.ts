@@ -6,6 +6,7 @@ import PhotoCtrl from "./controller/PhotoCtrl";
 import ProductCtrl from "./controller/ProductCtrl";
 import SellerCtrl from "./controller/SellerCtrl";
 import UserCtrl from "./controller/UserCtrl";
+import OtherCtrl from "./controller/OtherCtrl";
 import * as multer  from "multer";
 
 const storage = multer.diskStorage({
@@ -37,7 +38,8 @@ export class Api
   photoCtrl: PhotoCtrl;
   productCtrl: ProductCtrl;
   sellerCtrl: SellerCtrl;
-  userCtrl : UserCtrl;
+  userCtrl: UserCtrl;
+  otherCtrl: OtherCtrl;
 
   constructor()
   {
@@ -49,6 +51,7 @@ export class Api
     this.productCtrl = new ProductCtrl();
     this.sellerCtrl = new SellerCtrl();
     this.userCtrl = new UserCtrl();
+    this.otherCtrl = new OtherCtrl();
     this.init();
   }
 
@@ -87,6 +90,8 @@ export class Api
 
     this.router.get('/category/',this.categoryCtrl.getCategoryDetails);
 
+    this.router.get('/category/list',this.categoryCtrl.getCategoryList);
+
     this.router.post('/category/',this.categoryCtrl.saveCategory);
 
     this.router.put('/category/',this.categoryCtrl.setCategory);
@@ -116,6 +121,10 @@ export class Api
     this.router.get('/order/',this.orderCtrl.getOrderDetails);
 
     this.router.post('/order/',this.orderCtrl.saveOrder);    
+
+    this.router.get('/color/list', this.otherCtrl.getColorList);
+
+    this.router.get('/age/list', this.otherCtrl.getAgeList);
 
     return this;
   }

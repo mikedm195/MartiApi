@@ -31,6 +31,7 @@ export interface SqlRepository
   saveCategory(category: Category): Promise<number>;
   setCategory(category: Category): Promise<void>;
   getCategoryDetails(categoryId: number): Promise<Category>;
+  getCategoryList(): Promise<Category[]>;
   deleteCategory(categoryId: number): Promise<void>;
 
   saveOrder(order: Order): Promise<number>;
@@ -47,4 +48,7 @@ export interface SqlRepository
   getPhotoDetails(photoId: number): Promise<Photo>;
   getPhotoList(productId: number, colorId: number): Promise<Photo[]>;
   deletePhoto(photoId: number): Promise<void>;
+
+  getColorList(): Promise <string[]>;
+  getAgeList(): Promise <string[]>;
 }

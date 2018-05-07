@@ -35,6 +35,15 @@ export default class CategoryCtrl
             });
     }
 
+    getCategoryList(req: Request, res: Response, next: NextFunction)
+    {        
+        SqlSource.getCategoryList()
+            .then((result: [Category]) =>
+            {
+                CtrlUtil.sendList(res, result);
+            });
+    }
+
     setCategory(req: Request, res: Response, next: NextFunction)
     {
         let categoryId = req.body.categoryt_id;

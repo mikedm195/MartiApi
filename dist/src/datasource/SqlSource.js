@@ -205,7 +205,7 @@ var SqlSource = /** @class */ (function () {
             var query = "SELECT * " +
                 "FROM Products ";
             if (categoryId)
-                whereQuery = "WHERE category_id = " + categoryId;
+                whereQuery = "WHERE category_id = " + categoryId + " ";
             if (color)
                 if (!whereQuery)
                     whereQuery = "WHERE color = '" + color + "' ";
@@ -218,7 +218,7 @@ var SqlSource = /** @class */ (function () {
                     whereQuery += " AND age = '" + age + "' ";
             if (whereQuery)
                 query += whereQuery;
-            query += ";";
+            query += "ORDER BY RAND();";
             _this.sql.query(query, function (err, result, fields) {
                 if (err)
                     return reject(err);
@@ -399,6 +399,24 @@ var SqlSource = /** @class */ (function () {
                     var mapper = new CategoryMapper_1.CategoryMapper();
                     var res = mapper.transformList(result);
                     resolve(res[0]);
+                }
+                else
+                    resolve(null);
+            });
+        });
+    };
+    SqlSource.prototype.getCategoryList = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            var query = "SELECT * " +
+                "FROM Categories;";
+            _this.sql.query(query, function (err, result, fields) {
+                if (err)
+                    return reject(err);
+                if (result.length > 0) {
+                    var mapper = new CategoryMapper_1.CategoryMapper();
+                    var res = mapper.transformList(result);
+                    resolve(res);
                 }
                 else
                     resolve(null);
@@ -678,6 +696,40 @@ var SqlSource = /** @class */ (function () {
                 }
                 else
                     resolve();
+            });
+        });
+    };
+    SqlSource.prototype.getColorList = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            var query = "SELECT DISTINCT color " +
+                "FROM Products " +
+                "WHERE color IS NOT NULL;";
+            _this.sql.query(query, function (err, result, fields) {
+                if (err)
+                    return reject(err);
+                if (result.length > 0) {
+                    resolve(result);
+                }
+                else
+                    resolve(null);
+            });
+        });
+    };
+    SqlSource.prototype.getAgeList = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            var query = "SELECT DISTINCT age " +
+                "FROM Products " +
+                "WHERE age IS NOT NULL;";
+            _this.sql.query(query, function (err, result, fields) {
+                if (err)
+                    return reject(err);
+                if (result.length > 0) {
+                    resolve(result);
+                }
+                else
+                    resolve(null);
             });
         });
     };
