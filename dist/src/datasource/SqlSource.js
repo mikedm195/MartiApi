@@ -12,7 +12,7 @@ var UserMapper_1 = require("./mapper/sql/UserMapper");
 var SqlSource = /** @class */ (function () {
     function SqlSource() {
         this.sql = mysql.createConnection({
-            host: "ubiquitous.csf.itesm.mx",
+            host: "localhost",
             user: "1015019_user",
             password: "1015019",
             database: "pddm11015019",
