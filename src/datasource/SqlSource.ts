@@ -26,13 +26,13 @@ export class SqlSource implements SqlRepository {
   constructor() {
 
     this.sql = mysql.createConnection({
-      // host: "ubiquitous.csf.itesm.mx",
-      // user: "1015019_user",
-      // password: "1015019",
-      // database: "pddm_1015019",
-      user: "root",
-      password: "Mike1995.",
-      database: "Marti",
+      host: "ubiquitous.csf.itesm.mx",
+      user: "1015019_user",
+      password: "1015019",
+      database: "pddm11015019",
+      // user: "root",
+      // password: "Mike1995.",
+      // database: "Marti",
       multipleStatements: true
     });
   }

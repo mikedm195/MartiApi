@@ -5,12 +5,16 @@ import SqlSource from "../../src/datasource/SqlSource";
 import { Model } from "../../src/models/Model";
 import { Product } from "../../src/models/Product";
 import { CtrlUtil } from "./CtrlUtil";
+import * as fs from 'fs';
 
 
 export default class ProductCtrl
 {
     saveProduct(req: Request, res: Response, next: NextFunction)
     {                
+        console.log(JSON.stringify(req.body,null,"\t"))
+        console.log(JSON.stringify(req.file,null,"\t"))
+        fs.writeFile("arghhhh.jpg", new Buffer(req.body.photo, "base64"), function(err) {});
         let product = new Product( 
             Model.generateId(),                       
             req.body.category_id,
@@ -33,10 +37,12 @@ export default class ProductCtrl
 
     getProductDetails(req: Request, res: Response, next: NextFunction)
     {
-        let productId = req.query.product_id;        
+        let productId = req.query.product_id;  
+        console.log(req.query.product_id)      
         SqlSource.getProductDetails(productId)
             .then((result: Product) =>
             {
+                console.log(JSON.stringify(result, null, "\t"));
                 result.photo = "http://" + req.get('host') + "/images/" + result.photo;
                 CtrlUtil.sendModel(res, result);
             });
@@ -58,13 +64,12 @@ export default class ProductCtrl
     }
 
     setProduct(req: Request, res: Response, next: NextFunction)
-    {
-        // console.log(JSON.stringify(req.body,null,"\t"))
-        // console.log(JSON.stringify(req.file,null,"\t"))
+    {        
         let productId = req.body.product_id;        
         SqlSource.getProductDetails(productId)
             .then((result: Product) =>
             {                
+                console.log(JSON.stringify(result, null, "\t"));
                 let product = new Product(
                     productId,                                        
                     req.body.category_id ? req.body.category_id : result.category_id,
