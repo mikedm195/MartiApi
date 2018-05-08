@@ -45,8 +45,8 @@ export default class CategoryCtrl
     }
 
     setCategory(req: Request, res: Response, next: NextFunction)
-    {
-        let categoryId = req.body.categoryt_id;
+    {        
+        let categoryId = req.body.category_id;        
         SqlSource.getCategoryDetails(categoryId)
             .then((result: Category) =>
             {
@@ -54,7 +54,7 @@ export default class CategoryCtrl
                     categoryId,                    
                     req.body.name ? req.body.name : result.name,
                     req.body.description ? req.body.description : result.description,                                        
-                );                
+                );                                
                 SqlSource.setCategory(category)
                         .then((result: void) =>
                         {
@@ -65,7 +65,8 @@ export default class CategoryCtrl
 
     deleteCategory(req: Request, res: Response, next: NextFunction)
     {
-        let categoryId = req.query.category_id;        
+        let categoryId = req.query.category_id;
+        console.log(categoryId);
         SqlSource.deleteCategory(categoryId)
             .then((result: void) =>
             {

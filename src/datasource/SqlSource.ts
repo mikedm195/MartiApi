@@ -385,7 +385,7 @@ export class SqlSource implements SqlRepository {
         "SET name = '" + category.name + "', " +
         "description = '" + category.description + "' " +
         "WHERE category_id = '" + category.id + "'; " +
-        "SET foreign_key_checks = 1;";
+        "SET foreign_key_checks = 1;";        
 
       this.sql.query(query, function (err, result, fields) {
         if (err) return reject(err);
@@ -399,7 +399,7 @@ export class SqlSource implements SqlRepository {
       var query =
         "SELECT * " +
         "FROM Categories " +
-        "WHERE category_id = " + categoryId;
+        "WHERE category_id = " + categoryId;        
 
       this.sql.query(query, function (err, result, fields) {
         if (err) return reject(err);

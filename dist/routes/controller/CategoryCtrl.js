@@ -29,7 +29,7 @@ var CategoryCtrl = /** @class */ (function () {
         });
     };
     CategoryCtrl.prototype.setCategory = function (req, res, next) {
-        var categoryId = req.body.categoryt_id;
+        var categoryId = req.body.category_id;
         SqlSource_1.default.getCategoryDetails(categoryId)
             .then(function (result) {
             var category = new Category_1.Category(categoryId, req.body.name ? req.body.name : result.name, req.body.description ? req.body.description : result.description);
@@ -41,6 +41,7 @@ var CategoryCtrl = /** @class */ (function () {
     };
     CategoryCtrl.prototype.deleteCategory = function (req, res, next) {
         var categoryId = req.query.category_id;
+        console.log(categoryId);
         SqlSource_1.default.deleteCategory(categoryId)
             .then(function (result) {
             CtrlUtil_1.CtrlUtil.sendOk(res);
